@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -6,6 +10,8 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var adminRouter = require('./routes/admin');
+var getRouter = require('./routes/db');
 
 var app = express();
 
@@ -17,25 +23,33 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-//app.use(express.static(path.join(__dirname, 'public')));
-//app.use(express.static(path.join(__dirname, './../my-app/build')));
-//console.log(path.join(__dirname, './../my-app/build'));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3001');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Reuested-With, Content-Type, Accept'
+  );
+  next();
+});
 
 app.use('/', indexRouter);
-app.use('/react', indexRouter);
 app.use('/users', usersRouter);
+app.use('/admin', adminRouter);
+app.use('/db', getRouter);
 
 app.get('/hey', (req, res, next) => {
-  res.send('whats app')
-})
+  res.send('whats app');
+});
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
