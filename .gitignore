@@ -1,0 +1,6 @@
+.env
+/server/node_modules
+/front/node_modules
+/front/build
+.vscode
+package-lock.json
