@@ -2,18 +2,18 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var adminRouter = require('./routes/admin');
-var getRouter = require('./routes/db');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const adminRouter = require('./routes/admin');
+const getRouter = require('./routes/db');
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -26,11 +26,15 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3001');
   res.header(
     'Access-Control-Allow-Headers',
-    'Origin, X-Reuested-With, Content-Type, Accept'
+    'Origin, X-Requested-With, Content-Type, Accept'
   );
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS, POST');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Max-Age', '1800');
+  res.header('Content-Length', '3' );
   next();
 });
 

@@ -1,25 +1,60 @@
 const express = require('express');
-const path = require('path');
 const router = express.Router();
+const createError = require('http-errors');
 
-router.get('/get', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   const dataFromDB = require('../models/server/get_data.js');
-  const users = await dataFromDB({}, 'product_item');
-  console.log(users);
-  res.send(users);
-  // next()
-  //   res.sendFile(path.join(__dirname, '../public/build/index.html'), (err) => {
-  //   });
+  const mongooseModule = req.body.mongooseModule;
+  const query = req.body.query;
+  try {
+    const data = await dataFromDB(query, mongooseModule); //query all = {}
+    res.send(data);
+  } catch (error) {
+    console.log(error);
+    res.send('error');
+  }
+  //   next()
 });
-router.get('/post/:name', async (req, res, next) => {
-  console.log('sdfsffsdfsdfsdfsdf');
 
-  console.log(req.params.name);
+router.post('/', async (req, res, next) => {
   const insertToDB = require('../models/server/send_data.js');
-  const users = await insertToDB(req.params.name, 'product_item');
-  console.log(users);
-  res.send(users);
-  // next()
+  const mongooseModule = req.body.mongooseModule;
+  const data = req.body.data;
+  try {
+    await insertToDB(data, mongooseModule);
+    res.send(`the data ${data} was successfully send`);
+  } catch (error) {
+    console.log(error);
+    res.send('error');
+  }
+  //   next();
+});
+router.delete('/', async (req, res, next) => {
+  const deleteData = require('../models/server/delete_data.js');
+  const mongooseModule = req.body.mongooseModule;
+  const query = req.body.query;
+  try {
+    const data = await deleteData(query, mongooseModule);
+    res.send(`the data was successfully deleted`);
+  } catch (error) {
+    console.log(error);
+    res.send('error');
+  }
+  //   next();
+});
+router.put('/', async (req, res, next) => {
+  const editData = require('../models/server/edit_data.js');
+  const mongooseModule = req.body.mongooseModule;
+  const row = req.body.row;
+  const data = req.body.data;
+  try {
+    await editData(row, data, mongooseModule);
+    res.send(`the data was successfully edited`);
+  } catch (error) {
+    console.log(error);
+    res.send('error');
+  }
+  //   next();
 });
 
 router.use(function (req, res, next) {
