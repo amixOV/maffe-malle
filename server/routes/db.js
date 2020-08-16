@@ -4,13 +4,18 @@ const createError = require('http-errors');
 
 router.get('/', async (req, res, next) => {
   const dataFromDB = require('../models/server/get_data.js');
-  const mongooseModule = req.body.mongooseModule;
-  const query = req.body.query;
+  let mongooseModule = req.body.mongooseModule;
+  let query = req.body.query;
+  console.log(mongooseModule );
+  if (mongooseModule == undefined ) {
+    mongooseModule = 'product_module'
+    query = {}
+  }
   try {
     const data = await dataFromDB(query, mongooseModule); //query all = {}
     res.send(data);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.send('error');
   }
   //   next()
@@ -23,6 +28,7 @@ router.post('/', async (req, res, next) => {
   try {
     await insertToDB(data, mongooseModule);
     res.send(`the data ${data} was successfully send`);
+    obj
   } catch (error) {
     console.log(error);
     res.send('error');
@@ -34,11 +40,11 @@ router.delete('/', async (req, res, next) => {
   const mongooseModule = req.body.mongooseModule;
   const query = req.body.query;
   try {
-    const data = await deleteData(query, mongooseModule);
+    await deleteData(query, mongooseModule);
     res.send(`the data was successfully deleted`);
   } catch (error) {
-    console.log(error);
-    res.send('error');
+    console.log('\n -----ERROR------from---DB---- \n' + error);
+    res.send('error: ' + error);
   }
   //   next();
 });
@@ -49,7 +55,7 @@ router.put('/', async (req, res, next) => {
   const data = req.body.data;
   try {
     await editData(row, data, mongooseModule);
-    res.send(`the data was successfully edited`);
+    res.send(`the data ${data} with id ${row} was successfully edited`);
   } catch (error) {
     console.log(error);
     res.send('error');

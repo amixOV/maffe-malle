@@ -18,9 +18,10 @@
 	},
 	"scripts": {
 		"start": "react-scripts start",
-		"build": "react-scripts build",
+		"build": "react-scripts build && rm -rf ../server/public/build && mv build ../server/public",
 		"test": "react-scripts test",
-		"eject": "react-scripts eject"
+		"eject": "react-scripts eject",
+		"stop": "sudo lsof -i :3000 -t | xargs kill"
 	},
 	"eslintConfig": {
 		"extends": "react-app"

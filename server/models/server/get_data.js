@@ -12,7 +12,7 @@ dataFromDB = (query, mongooseModule) => {
   }
 
   const module = require(`../mongoose_model/${mongooseModule}.js`);
-  
+
   mongoose.connect(dbURL, { useNewUrlParser: true });
   // module.find(query, (e, res) => {
   //   console.log(res);
@@ -25,19 +25,14 @@ dataFromDB = (query, mongooseModule) => {
       .then((data) => {
         console.log('----connect to : ' + dbURL);
         console.log('----mongoose module : ' + mongooseModule);
-        mongoose.connection.close();
+        // mongoose.connection.close();
         resolve(data);
       })
       .catch((err) => {
         console.error('====================error : ' + err);
-        mongoose.connection.close();
+        // mongoose.connection.close();
         reject(err);
       });
-      
-    }).catch((error) => {
-      console.error(error);
-      mongoose.connection.close();
-    reject(error);
   });
 };
 module.exports = dataFromDB;

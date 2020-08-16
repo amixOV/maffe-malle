@@ -25,20 +25,19 @@ deleteData = (query, mongooseModule) => {
       .then((data) => {
         console.log('----connect to : ' + dbURL);
         console.log('----mongoose module : ' + mongooseModule);
-        mongoose.connection.close();
         resolve(data);
       })
+      .then(() => {
+        // mongoose.connection.close();
+        
+      } )
       .catch((err) => {
-        console.error('====================error : ' + err);
-        mongoose.connection.close();
+        console.error(' \n ----ERROR-----from-----delete_data---- \n' + err);
+        // mongoose.connection.close();
         reject(err);
       });
  
-  }).catch((error) => {
-    console.error(error);
-    mongoose.connection.close();
-    reject(error);
-  });
+  })
 };
 module.exports = deleteData;
 

@@ -32,11 +32,9 @@ editData = (rowToUpdate, dataToUpdate, mongooseModule) => {
         console.log('----connect to : ' + dbURL);
         console.log('----mongoose module  : ' + mongooseModule);
         console.log('save data to db ' + data);
-        mongoose.connection.close();
         resolve(data);
       })
       .catch((err) => {
-        mongoose.connection.close();
         reject(err);
       });
   });
